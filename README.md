@@ -16,7 +16,7 @@ Example:
 > export OPENDB_LIB_PATH=<OpenDB Built Library Directory>
 > cmake ..
 > make
-> cp libhello_transform.so <PhyKnight Transforms directory>
+> make install # Or sudo make install
 ```
 
 ## Usage
