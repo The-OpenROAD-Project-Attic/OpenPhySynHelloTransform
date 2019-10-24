@@ -32,7 +32,7 @@
 #include "HelloTransform.hpp"
 #include <PhyKnight/PhyLogger/PhyLogger.hpp>
 
-void HelloTransform::addWire(phy::Database *db_, std::string name) {
+int HelloTransform::addWire(phy::Database *db_, std::string name) {
 
   phy::LibrarySet libs = db_->getLibs();
   phy::Library *lib;
@@ -60,20 +60,42 @@ void HelloTransform::addWire(phy::Database *db_, std::string name) {
     block = phy::Block::create(chip, "top");
   }
   phy::Net *n1 = phy::Net::create(block, name.c_str());
+  return (n1 != nullptr);
+}
+
+int HelloTransform::buffer(phy::Database *db_, int max_fanout,
+                           std::string buffer_cell) {
+  phy::PhyLogger::instance().info("Buffer using {} for cell with fan-out > {}",
+                                  buffer_cell, max_fanout);
+  return 0;
+}
+
+bool HelloTransform::isNumber(const std::string &s) {
+  return !s.empty() && std::find_if(s.begin(), s.end(), [](char c) {
+                         return !std::isdigit(c);
+                       }) == s.end();
 }
 
 int HelloTransform::run(phy::Phy *phy_, phy::Database *db_,
                         std::vector<std::string> args) {
-  if (args.size() != 1) {
-    phy::PhyLogger::instance().error(
-        "Usage phy::transform hello_transform <net_name>");
-    return -1;
-  }
-  phy::PhyLogger::instance().info("Hello Transform, arguments:");
+
+  phy::PhyLogger::instance().debug("Passed arguments:");
   for (auto &arg : args) {
-    phy::PhyLogger::instance().info("{}", arg);
+    phy::PhyLogger::instance().debug("{}", arg);
   }
-  std::string net_name = args[0];
-  addWire(db_, net_name);
-  return 1;
+
+  if (args.size() == 1) {
+    std::string net_name = args[0];
+    phy::PhyLogger::instance().info("Adding random wire {}", net_name);
+    return addWire(db_, net_name);
+  } else if (args.size() == 3 && args[0] == "buffer" && isNumber(args[1])) {
+    return buffer(db_, stoi(args[1]), args[2]);
+  } else {
+    phy::PhyLogger::instance().error("Usage:\n transform hello_transform "
+                                     "<net_name>\n transform hello_transform "
+                                     "buffer "
+                                     "<max_fanout> <buffer_cell>");
+  }
+
+  return -1;
 }
