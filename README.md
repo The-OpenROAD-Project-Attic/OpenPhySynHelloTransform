@@ -14,6 +14,7 @@ Example:
 > export PHY_LIB_PATH=<PhyKnight Built Library Directory>
 > export OPENDB_HOME_PATH=<OpenDB Source Code Directory>
 > export OPENDB_LIB_PATH=<OpenDB Built Library Directory>
+> export OPENDB_STA_PATH=<OpenSTA Source Code Directory>
 > cmake ..
 > make
 > make install # Or sudo make install

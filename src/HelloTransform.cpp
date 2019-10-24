@@ -34,12 +34,12 @@
 
 void HelloTransform::addWire(phy::Database *db_, std::string name) {
 
-  phy::LibertySet libs = db_->getLibs();
-  phy::Liberty *lib;
-  phy::LibertyTechnology *tech;
+  phy::LibrarySet libs = db_->getLibs();
+  phy::Library *lib;
+  phy::LibraryTechnology *tech;
 
   if (!libs.size()) {
-    tech = phy::LibertyTechnology::create(db_);
+    tech = phy::LibraryTechnology::create(db_);
     libs = db_->getLibs();
   } else {
     lib = *(libs.begin());
@@ -47,7 +47,7 @@ void HelloTransform::addWire(phy::Database *db_, std::string name) {
   }
 
   if (!tech) {
-    tech = phy::LibertyTechnology::create(db_);
+    tech = phy::LibraryTechnology::create(db_);
   }
 
   phy::Chip *chip = db_->getChip();
