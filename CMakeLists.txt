@@ -20,11 +20,20 @@ endif()
 if(DEFINED ENV{OPENDB_HOME_PATH})
 set(OPEDNDB_HOME $ENV{OPENDB_HOME_PATH})
 else()
-set(OPEDNDB_HOME ${PHY_HOME_PATH}/../external/OpenDB)
+set(OPEDNDB_HOME ${PHY_HOME_PATH}/external/OpenDB)
+endif()
+
+if(DEFINED ENV{OPENSTA_HOME_PATH})
+set(OPENSTA_HOME $ENV{OPENSTA_HOME_PATH})
+else()
+set(OPENSTA_HOME ${PHY_HOME_PATH}/external/OpenSTA)
 endif()
 
 IF(NOT EXISTS ${OPEDNDB_HOME})
 message( FATAL_ERROR "Cannot find OpenDB headers, set OPENDB_HOME_PATH variable." )
+endif()
+IF(NOT EXISTS ${OPENSTA_HOME})
+message( FATAL_ERROR "Cannot find OpenSTA headers, set OPENSTA_HOME_PATH variable." )
 endif()
 
 if(DEFINED ENV{PHY_LIB_PATH})
@@ -53,6 +62,7 @@ include_directories(
   ${OPEDNDB_HOME}/include
   ${OPEDNDB_HOME}/src
   ${OPEDNDB_HOME}/src/db
+  ${OPENSTA_HOME}/..
 )
 
 add_library(${TRANSFORM_NAME} SHARED src/HelloTransform.cpp)
