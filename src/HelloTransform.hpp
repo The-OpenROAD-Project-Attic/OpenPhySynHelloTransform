@@ -32,14 +32,22 @@
 #include <PhyKnight/Database/Types.hpp>
 #include <PhyKnight/Phy/Phy.hpp>
 #include <PhyKnight/Transform/PhyTransform.hpp>
+#include <cstring>
 
 class HelloTransform : public phy::PhyTransform {
+private:
+  bool isNumber(const std::string &s);
+
 public:
-  void addWire(phy::Database *db_, std::string name);
+  int addWire(phy::Database *db_, std::string name);
+  int buffer(phy::Database *db_, int max_fanout, std::string buffer_cell);
 
   int run(phy::Phy *phy_, phy::Database *db_,
           std::vector<std::string> args) override;
 };
 
 DEFINE_TRANSFORM(HelloTransform, "hello_transform", "1.0.0",
-                 "usage phy::transform hello_transform <net_name>")
+                 "Usage:\n transform hello_transform "
+                 "<net_name>\n transform hello_transform "
+                 "buffer "
+                 "<max_fanout> <buffer_cell>")
