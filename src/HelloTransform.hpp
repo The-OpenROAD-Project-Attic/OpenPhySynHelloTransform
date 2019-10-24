@@ -31,7 +31,6 @@
 
 #include <PhyKnight/Database/Types.hpp>
 #include <PhyKnight/Phy/Phy.hpp>
-#include <PhyKnight/PhyLogger/PhyLogger.hpp>
 #include <PhyKnight/Transform/PhyTransform.hpp>
 
 class HelloTransform : public phy::PhyTransform {

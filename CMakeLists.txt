@@ -48,9 +48,7 @@ endif()
 
 include_directories(
   src/
-  ${PHY_HOME_PATH}/src #To be removed when public headers are cleaned up
-  ${PHY_HOME_PATH}/include
-  ${PHY_HOME_PATH}/include/PhyKnight
+  ${PHY_HOME_PATH}/include/
   ${PHY_HOME_PATH}/external/spdlog/include
   ${OPEDNDB_HOME}/include
   ${OPEDNDB_HOME}/src

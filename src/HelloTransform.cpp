@@ -29,7 +29,8 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include <HelloTransform.hpp>
+#include "HelloTransform.hpp"
+#include <PhyKnight/PhyLogger/PhyLogger.hpp>
 
 void HelloTransform::addWire(phy::Database *db_, std::string name) {
 
