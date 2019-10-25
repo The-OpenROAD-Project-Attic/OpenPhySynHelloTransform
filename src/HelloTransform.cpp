@@ -31,15 +31,19 @@
 
 #include "HelloTransform.hpp"
 #include <PhyKnight/PhyLogger/PhyLogger.hpp>
+#include <algorithm>
+#include <cmath>
 
-int HelloTransform::addWire(phy::Database *db_, std::string name) {
+using namespace phy;
 
-  phy::LibrarySet libs = db_->getLibs();
-  phy::Library *lib;
-  phy::LibraryTechnology *tech;
+int HelloTransform::addWire(Database *db_, std::string name) {
+
+  LibrarySet libs = db_->getLibs();
+  Library *lib;
+  LibraryTechnology *tech;
 
   if (!libs.size()) {
-    tech = phy::LibraryTechnology::create(db_);
+    tech = LibraryTechnology::create(db_);
     libs = db_->getLibs();
   } else {
     lib = *(libs.begin());
@@ -47,27 +51,107 @@ int HelloTransform::addWire(phy::Database *db_, std::string name) {
   }
 
   if (!tech) {
-    tech = phy::LibraryTechnology::create(db_);
+    tech = LibraryTechnology::create(db_);
   }
 
-  phy::Chip *chip = db_->getChip();
+  Chip *chip = db_->getChip();
   if (!chip) {
-    chip = phy::Chip::create(db_);
+    chip = Chip::create(db_);
   }
 
-  phy::Block *block = chip->getBlock();
+  Block *block = chip->getBlock();
   if (!block) {
-    block = phy::Block::create(chip, "top");
+    block = Block::create(chip, "top");
   }
-  phy::Net *n1 = phy::Net::create(block, name.c_str());
+  Net *n1 = Net::create(block, name.c_str());
   return (n1 != nullptr);
 }
 
-int HelloTransform::buffer(phy::Database *db_, int max_fanout,
-                           std::string buffer_cell) {
-  phy::PhyLogger::instance().info("Buffer using {} for cell with fan-out > {}",
-                                  buffer_cell, max_fanout);
-  return 0;
+int HelloTransform::buffer(Phy *phy_inst, Database *db_, int max_fanout,
+                           std::string buffer_cell, std::string buffer_in_port,
+                           std::string buffer_out_port,
+                           std::string clock_port_name) {
+  PhyLogger &logger = PhyLogger::instance();
+  DatabaseHelper helper = *(phy_inst->helper());
+  LibraryCell *cell = helper.libraryCell(buffer_cell.c_str());
+  if (!cell) {
+    logger.error("Buffer {} not found!", buffer_cell);
+    return -1;
+  }
+  LibraryTerm *cell_in_pin = helper.libraryPin(cell, buffer_in_port.c_str());
+  LibraryTerm *cell_out_pin = helper.libraryPin(cell, buffer_out_port.c_str());
+  if (!cell_in_pin) {
+    logger.error("Pin {} not found!", buffer_in_port);
+    return -1;
+  }
+  if (!cell_out_pin) {
+    logger.error("Pin {} not found!", buffer_out_port);
+    return -1;
+  }
+  auto nets = helper.nets();
+  std::vector<Net *> high_fanout_nets;
+  for (auto &net : nets) {
+    if (!helper.isPrimary(net) &&
+        helper.fanoutCount(net) > (unsigned int)max_fanout) {
+      high_fanout_nets.push_back(net);
+    }
+  }
+  logger.info("High fanout nets [{}]: ", high_fanout_nets.size());
+  for (auto &net : high_fanout_nets) {
+    logger.info("Net: {} {}", net->getConstName(), helper.fanoutCount(net));
+  }
+  // To-Do: Remove clock net..
+  int buffer_index = 1;
+  int net_in_index = 1;
+  int net_out_index = 1;
+  int added_buffer_count = 0;
+  for (auto &net : high_fanout_nets) {
+    InstanceTerm *source_pin = helper.faninPin(net);
+    if (source_pin) {
+      logger.info("Buffering: {}", net->getConstName());
+      auto fanout_pins = helper.fanoutPins(net);
+      logger.info("Sink count: {}", fanout_pins.size());
+
+      int buffer_count = ceil(fanout_pins.size() / max_fanout);
+      helper.disconnectAll(net);
+      helper.del(net);
+      Net *new_net_in = helper.createNet(
+          std::string(std::string("bufnetin_") + std::to_string(net_in_index++))
+              .c_str());
+      helper.connect(new_net_in, source_pin);
+
+      logger.info("Adding {} buffer", buffer_count);
+      for (int i = 0; i < (int)fanout_pins.size(); i += max_fanout) {
+        Instance *new_buffer = helper.createInstance(
+            std::string(std::string("buf_") + std::to_string(buffer_index++))
+                .c_str(),
+            cell);
+        Net *new_net_out =
+            helper.createNet(std::string(std::string("bufnetout_") +
+                                         std::to_string(net_out_index++))
+                                 .c_str());
+        helper.connect(new_net_in, new_buffer, cell_in_pin);
+        helper.connect(new_net_out, new_buffer, cell_out_pin);
+        added_buffer_count++;
+        for (int j = i; j < i + max_fanout; j++) {
+          if (j < (int)fanout_pins.size()) {
+            helper.connect(new_net_out, fanout_pins[j]);
+          }
+        }
+      }
+    }
+  }
+  logger.info("Added {} buffer", added_buffer_count);
+
+  return 1;
+}
+
+std::string HelloTransform::bufferName(int index) {
+  return std::string("buf_" + std::to_string(index) + "_");
+}
+
+std::string HelloTransform::bufferNetName(int index) {
+  return std::string("bufnet_" + std::to_string(index) + "_");
 }
 
 bool HelloTransform::isNumber(const std::string &s) {
@@ -76,25 +160,27 @@ bool HelloTransform::isNumber(const std::string &s) {
                        }) == s.end();
 }
 
-int HelloTransform::run(phy::Phy *phy_, phy::Database *db_,
+int HelloTransform::run(Phy *phy_inst, Database *db,
                         std::vector<std::string> args) {
 
-  phy::PhyLogger::instance().debug("Passed arguments:");
+  PhyLogger::instance().debug("Passed arguments:");
   for (auto &arg : args) {
-    phy::PhyLogger::instance().debug("{}", arg);
+    PhyLogger::instance().debug("{}", arg);
   }
 
   if (args.size() == 1) {
     std::string net_name = args[0];
-    phy::PhyLogger::instance().info("Adding random wire {}", net_name);
-    return addWire(db_, net_name);
-  } else if (args.size() == 3 && args[0] == "buffer" && isNumber(args[1])) {
-    return buffer(db_, stoi(args[1]), args[2]);
+    PhyLogger::instance().info("Adding random wire {}", net_name);
+    return addWire(db, net_name);
+  } else if (args.size() == 6 && args[0] == "buffer" && isNumber(args[1])) {
+    return buffer(phy_inst, db, stoi(args[1]), args[2], args[3], args[4],
+                  args[5]);
   } else {
-    phy::PhyLogger::instance().error("Usage:\n transform hello_transform "
-                                     "<net_name>\n transform hello_transform "
-                                     "buffer "
-                                     "<max_fanout> <buffer_cell>");
+    PhyLogger::instance().error("Usage:\n transform hello_transform "
+                                "<net_name>\n transform hello_transform "
+                                "buffer "
+                                "<max_fanout> <buffer_cell> <buffer_in_port> "
+                                "<buffer_out_port> <clock_port>");
   }
 
   return -1;

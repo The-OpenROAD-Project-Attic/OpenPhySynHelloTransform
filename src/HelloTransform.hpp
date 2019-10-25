@@ -29,6 +29,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+#include <PhyKnight/Database/DatabaseHelper.hpp>
 #include <PhyKnight/Database/Types.hpp>
 #include <PhyKnight/Phy/Phy.hpp>
 #include <PhyKnight/Transform/PhyTransform.hpp>
@@ -40,14 +41,19 @@ private:
 
 public:
   int addWire(phy::Database *db_, std::string name);
-  int buffer(phy::Database *db_, int max_fanout, std::string buffer_cell);
+  int buffer(phy::Phy *phy_inst, phy::Database *db, int max_fanout,
+             std::string buffer_cell, std::string buffer_in_port,
+             std::string buffer_out_port, std::string clock_port_name);
 
-  int run(phy::Phy *phy_, phy::Database *db_,
+  int run(phy::Phy *phy_inst, phy::Database *db,
           std::vector<std::string> args) override;
+  std::string bufferName(int index);
+  std::string bufferNetName(int index);
 };
 
 DEFINE_TRANSFORM(HelloTransform, "hello_transform", "1.0.0",
                  "Usage:\n transform hello_transform "
                  "<net_name>\n transform hello_transform "
                  "buffer "
-                 "<max_fanout> <buffer_cell>")
+                 "<max_fanout> <buffer_cell> <buffer_in_port> "
+                 "<buffer_out_port> <clock_port>")

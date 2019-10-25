@@ -4,7 +4,11 @@ project(PhyKnightHelloTransform VERSION 1.0.0 LANGUAGES CXX)
 
 set(TRANSFORM_NAME hello_transform)
 
+set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS_INIT} -std=c++11 -fPIC")
+
 find_package(TCL REQUIRED)
+set(Boost_USE_STATIC_LIBS ON)
+
 
 
 if(DEFINED ENV{PHY_HOME_PATH})
@@ -66,24 +70,24 @@ include_directories(
 )
 
 add_library(${TRANSFORM_NAME} SHARED src/HelloTransform.cpp)
-target_link_libraries(${TRANSFORM_NAME} PhyKnight)
 target_link_libraries(${TRANSFORM_NAME}
-db
+PUBLIC
+opendb
 defin
-lefin
-lefout
-lef
 defout
-zutil
+# lefin
+lefout
+# lef
 zlib
+zutil
 tm
-dl
+# OpenSTA
+# ${ZLIB_LIBRARIES}
 ${TCL_LIBRARY}
+# ${Boost_LIBRARIES}
+dl
+PhyKnight
 )
-# set_target_properties( ${TRANSFORM_NAME}
-#       PROPERTIES
-#       LIBRARY_OUTPUT_DIRECTORY "../bin"
-#       )
 target_compile_features(${TRANSFORM_NAME} PRIVATE cxx_range_for cxx_auto_type)
 target_compile_options(${TRANSFORM_NAME} PRIVATE $<$<CXX_COMPILER_ID:GNU>:-Wall>)
 set_property(TARGET ${TRANSFORM_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
