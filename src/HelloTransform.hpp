@@ -35,25 +35,15 @@
 #include <PhyKnight/Transform/PhyTransform.hpp>
 #include <cstring>
 
-class HelloTransform : public phy::PhyTransform {
+class HelloTransform : public phy::PhyTransform
+{
 private:
-  bool isNumber(const std::string &s);
-
 public:
-  int addWire(phy::Database *db_, std::string name);
-  int buffer(phy::Phy *phy_inst, phy::Database *db, int max_fanout,
-             std::string buffer_cell, std::string buffer_in_port,
-             std::string buffer_out_port, std::string clock_port_name);
-
-  int run(phy::Phy *phy_inst, phy::Database *db,
-          std::vector<std::string> args) override;
-  std::string bufferName(int index);
-  std::string bufferNetName(int index);
+    int addWire(phy::Database* db_, std::string name);
+    int run(phy::Phy* phy_inst, phy::Database* db,
+            std::vector<std::string> args) override;
 };
 
 DEFINE_TRANSFORM(HelloTransform, "hello_transform", "1.0.0",
                  "Usage:\n transform hello_transform "
-                 "<net_name>\n transform hello_transform "
-                 "buffer "
-                 "<max_fanout> <buffer_cell> <buffer_in_port> "
-                 "<buffer_out_port> <clock_port>")
+                 "<net_name>\n")

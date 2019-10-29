@@ -26,8 +26,6 @@ Example:
 > ./Phy
 > # Add random wire
 > transform hello_transform net1
-> # Run simple buffering algorithm for cell with max-fanout 2
-> transform hello_transform buffer 2 BUF_X1 A Z clk
 > write_def out.def
 ```
 
