@@ -39,7 +39,7 @@ class HelloTransform : public phy::PhyTransform
 {
 private:
 public:
-    int addWire(phy::Database* db_, std::string name);
+    int addWire(phy::Phy* phy_inst, std::string name);
     int run(phy::Phy* phy_inst, phy::Database* db,
             std::vector<std::string> args) override;
 };
