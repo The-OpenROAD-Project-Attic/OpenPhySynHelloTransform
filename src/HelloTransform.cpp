@@ -37,41 +37,10 @@
 using namespace phy;
 
 int
-HelloTransform::addWire(Database* db_, std::string name)
+HelloTransform::addWire(Phy* phy_inst, std::string name)
 {
-
-    LibrarySet         libs = db_->getLibs();
-    Library*           lib;
-    LibraryTechnology* tech;
-
-    if (!libs.size())
-    {
-        tech = LibraryTechnology::create(db_);
-        libs = db_->getLibs();
-    }
-    else
-    {
-        lib  = *(libs.begin());
-        tech = lib->getTech();
-    }
-
-    if (!tech)
-    {
-        tech = LibraryTechnology::create(db_);
-    }
-
-    Chip* chip = db_->getChip();
-    if (!chip)
-    {
-        chip = Chip::create(db_);
-    }
-
-    Block* block = chip->getBlock();
-    if (!block)
-    {
-        block = Block::create(chip, "top");
-    }
-    Net* n1 = Net::create(block, name.c_str());
+    DatabaseHelper helper = *(phy_inst->helper());
+    Net*           n1     = helper.createNet(name.c_str());
     return (n1 != nullptr);
 }
 
@@ -89,7 +58,7 @@ HelloTransform::run(Phy* phy_inst, Database* db, std::vector<std::string> args)
     {
         std::string net_name = args[0];
         PhyLogger::instance().info("Adding random wire {}", net_name);
-        return addWire(db, net_name);
+        return addWire(phy_inst, net_name);
     }
     else
     {
