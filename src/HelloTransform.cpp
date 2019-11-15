@@ -39,8 +39,8 @@ using namespace phy;
 int
 HelloTransform::addWire(Phy* phy_inst, std::string name)
 {
-    DatabaseHelper helper = *(phy_inst->helper());
-    Net*           n1     = helper.createNet(name.c_str());
+    DatabaseHandler handler = *(phy_inst->handler());
+    Net*            n1      = handler.createNet(name.c_str());
     return (n1 != nullptr);
 }
 
