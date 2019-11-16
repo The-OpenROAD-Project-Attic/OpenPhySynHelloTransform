@@ -30,39 +30,39 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 #include "HelloTransform.hpp"
-#include <PhyKnight/PhyLogger/PhyLogger.hpp>
+#include <OpenPhySyn/PsnLogger/PsnLogger.hpp>
 #include <algorithm>
 #include <cmath>
 
-using namespace phy;
+using namespace psn;
 
 int
-HelloTransform::addWire(Phy* phy_inst, std::string name)
+HelloTransform::addWire(Psn* psn_inst, std::string name)
 {
-    DatabaseHandler handler = *(phy_inst->handler());
+    DatabaseHandler handler = *(psn_inst->handler());
     Net*            n1      = handler.createNet(name.c_str());
     return (n1 != nullptr);
 }
 
 int
-HelloTransform::run(Phy* phy_inst, std::vector<std::string> args)
+HelloTransform::run(Psn* psn_inst, std::vector<std::string> args)
 {
 
-    PhyLogger::instance().debug("Passed arguments:");
+    PsnLogger::instance().debug("Passed arguments:");
     for (auto& arg : args)
     {
-        PhyLogger::instance().debug("{}", arg);
+        PsnLogger::instance().debug("{}", arg);
     }
 
     if (args.size() == 1)
     {
         std::string net_name = args[0];
-        PhyLogger::instance().info("Adding random wire {}", net_name);
-        return addWire(phy_inst, net_name);
+        PsnLogger::instance().info("Adding random wire {}", net_name);
+        return addWire(psn_inst, net_name);
     }
     else
     {
-        PhyLogger::instance().error("Usage:\n transform hello_transform "
+        PsnLogger::instance().error("Usage:\n transform hello_transform "
                                     "<net_name>\n");
     }
 
