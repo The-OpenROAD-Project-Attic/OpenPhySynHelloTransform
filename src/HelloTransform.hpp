@@ -40,8 +40,7 @@ class HelloTransform : public phy::PhyTransform
 private:
 public:
     int addWire(phy::Phy* phy_inst, std::string name);
-    int run(phy::Phy* phy_inst, phy::Database* db,
-            std::vector<std::string> args) override;
+    int run(phy::Phy* phy_inst, std::vector<std::string> args) override;
 };
 
 DEFINE_TRANSFORM(HelloTransform, "hello_transform", "1.0.0",

@@ -45,7 +45,7 @@ HelloTransform::addWire(Phy* phy_inst, std::string name)
 }
 
 int
-HelloTransform::run(Phy* phy_inst, Database* db, std::vector<std::string> args)
+HelloTransform::run(Phy* phy_inst, std::vector<std::string> args)
 {
 
     PhyLogger::instance().debug("Passed arguments:");
