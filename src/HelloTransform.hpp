@@ -29,18 +29,18 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-#include <PhyKnight/Database/DatabaseHandler.hpp>
-#include <PhyKnight/Database/Types.hpp>
-#include <PhyKnight/Phy/Phy.hpp>
-#include <PhyKnight/Transform/PhyTransform.hpp>
+#include <OpenPhySyn/Database/DatabaseHandler.hpp>
+#include <OpenPhySyn/Database/Types.hpp>
+#include <OpenPhySyn/Psn/Psn.hpp>
+#include <OpenPhySyn/Transform/PsnTransform.hpp>
 #include <cstring>
 
-class HelloTransform : public phy::PhyTransform
+class HelloTransform : public psn::PsnTransform
 {
 private:
 public:
-    int addWire(phy::Phy* phy_inst, std::string name);
-    int run(phy::Phy* phy_inst, std::vector<std::string> args) override;
+    int addWire(psn::Psn* psn_inst, std::string name);
+    int run(psn::Psn* psn_inst, std::vector<std::string> args) override;
 };
 
 DEFINE_TRANSFORM(HelloTransform, "hello_transform", "1.0.0",
