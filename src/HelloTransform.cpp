@@ -39,8 +39,8 @@ using namespace psn;
 int
 HelloTransform::addWire(Psn* psn_inst, std::string name)
 {
-    DatabaseHandler handler = *(psn_inst->handler());
-    Net*            n1      = handler.createNet(name.c_str());
+    DatabaseHandler& handler = *(psn_inst->handler());
+    Net*             n1      = handler.createNet(name.c_str());
     return (n1 != nullptr);
 }
 
