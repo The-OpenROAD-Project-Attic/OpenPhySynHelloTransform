@@ -1,6 +1,6 @@
 # OpenPhySyn Hello Transform
 
-A simple template for building Psnsical Synthesis transforms for [OpenPhySyn](https://github.com/The-OpenROAD-Project/OpenPhySyn)
+A simple template for building Physical Synthesis transforms for [OpenPhySyn](https://github.com/The-OpenROAD-Project/OpenPhySyn)
 
 ## Building
 
