@@ -26,7 +26,7 @@ Example:
 > ./Psn
 > # Add random wire
 > transform hello_transform net1
-> write_def out.def
+> export_def out.def
 ```
 
 Make sure to set `PSN_HOME_PATH` to OpenPhySyn source code path, `PSN_LIB_PATH` to the directory containing the built OpenPhySyn library file, `OPENDB_HOME_PATH` to [OpenDB](https://github.com/The-OpenROAD-Project/OpenDB) include path, `OPENDB_LIB_PATH` the directory containing the built [OpenDB](https://github.com/The-OpenROAD-Project/OpenDB) library files.
