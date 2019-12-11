@@ -7,7 +7,6 @@ set(TRANSFORM_NAME hello_transform)
 set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS_INIT} -std=c++11 -fPIC")
 
 find_package(TCL REQUIRED)
-set(Boost_USE_STATIC_LIBS ON)
 
 
 
@@ -65,16 +64,11 @@ PUBLIC
 opendb
 defin
 defout
-# lefin
 lefout
-# lef
 zlib
 zutil
 tm
-# OpenSTA
-# ${ZLIB_LIBRARIES}
 ${TCL_LIBRARY}
-# ${Boost_LIBRARIES}
 dl
 OpenPhySyn
 )
