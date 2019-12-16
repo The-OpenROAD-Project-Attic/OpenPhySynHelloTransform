@@ -48,22 +48,22 @@ int
 HelloTransform::run(Psn* psn_inst, std::vector<std::string> args)
 {
 
-    PsnLogger::instance().debug("Passed arguments:");
+    PSN_LOG_DEBUG("Passed arguments:");
     for (auto& arg : args)
     {
-        PsnLogger::instance().debug("{}", arg);
+        PSN_LOG_DEBUG("{}", arg);
     }
 
     if (args.size() == 1)
     {
         std::string net_name = args[0];
-        PsnLogger::instance().info("Adding random wire {}", net_name);
+        PSN_LOG_INFO("Adding random wire {}", net_name);
         return addWire(psn_inst, net_name);
     }
     else
     {
-        PsnLogger::instance().error("Usage:\n transform hello_transform "
-                                    "<net_name>\n");
+        PSN_LOG_ERROR("Usage:\n transform hello_transform "
+                      "<net_name>\n");
     }
 
     return -1;
