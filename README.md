@@ -1,6 +1,6 @@
 # OpenPhySyn Hello Transform
 
-A simple template for building Physical Synthesis transforms for [OpenPhySyn](https://github.com/The-OpenROAD-Project/OpenPhySyn)
+A simple template for building Physical Synthesis transforms for [OpenPhySyn](https://github.com/The-OpenROAD-Project/OpenPhySyn) physical synthesis tool.
 
 ## Building
 
@@ -10,12 +10,9 @@ Example:
 
 ```bash
 > mkdir build && cd build
-> export PSN_HOME_PATH=<OpenPhySyn Source Code Path>
-> export PSN_LIB_PATH=<OpenPhySyn Built Library Directory>
-> export OPENDB_HOME_PATH=<OpenDB Source Code Directory>
-> export OPENDB_LIB_PATH=<OpenDB Built Library Directory>
-> export OPENDB_STA_PATH=<OpenSTA Source Code Directory>
-> cmake ..
+> cmake .. -DPSN_HOME=<OpenPhySyn Source Code Path> \
+> -DOPENDB_HOME=<OpenDB Source Code Directory> \
+> -DOPENSTA_HOME=<OpenSTA Source Code Directory>
 > make
 > make install # Or sudo make install
 ```
@@ -30,9 +27,3 @@ Example:
 > transform hello_transform net1
 > export_def out.def
 ```
-
-If building outside OpenPhySyn source tree, make sure to:
-- Set `PSN_HOME_PATH` to OpenPhySyn source code path
-- Set `PSN_LIB_PATH` to the directory containing the built OpenPhySyn library file
-- Set `OPENDB_HOME_PATH` to [OpenDB](https://github.com/The-OpenROAD-Project/OpenDB) include path
-- Set `OPENDB_LIB_PATH` the directory containing the built [OpenDB](https://github.com/The-OpenROAD-Project/OpenDB) library files.
